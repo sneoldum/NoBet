@@ -1,0 +1,82 @@
+﻿@page
+@using FluentValidation.TestHelper
+@using NoBet.Services
+@model NoBet.Pages.HomeModel
+@{
+    ViewData["Title"] = "Home page";
+    Layout = "_Layout";
+}
+
+<html>
+<head>
+    <title>Bugünkü Maçlar</title>
+</head>
+<body>
+    <h1>Gelecek Tüm maçlar</h1>
+    @if (Model.AllMatches != null)
+    {
+
+        @foreach (var match in Model.AllMatches)
+        {
+            var date = DateTimeOffset.FromUnixTimeSeconds(match.d).LocalDateTime;
+            var dDate = date.Date;
+            var today = DateTimeOffset.Now.LocalDateTime.Date;
+            var printingDate = "";
+            var time = "";
+
+            if (today == dDate)
+            {
+                var targetText = "collapse" + match.i;
+                <div id="accordion">
+
+                    <div class="card">
+                        <div class="card-header" id="headingOne">
+                            <h5 class="mb-0">
+                                <button class="btn btn-link" data-toggle="collapse" data-target="#@targetText" aria-expanded="true" aria-controls="@targetText">
+                                    @match.hn - @match.an
+                                </button>
+                            </h5>
+                        </div>
+
+                        <div id="@targetText" class="collapse show" aria-labelledby="headingOne" data-parent="#accordion">
+                            @if (Model.MatchDetails != null)
+                            {
+                                var betService = new BetService();
+                                var details = betService.GetMatchById(match.i).Datas;
+                                @foreach (var item in details.m)
+                                {
+                                    foreach (var outcome in item.o)
+                                    {
+                                        <button class="cardButton">
+                                            <div class="card border-warning mb-3 card-body" style="max-width: 18rem; display: flex;">
+                                                <div class="card-header">@outcome.n</div>
+                                                <div class="card-body">
+                                                    <h6 class="card-title">@outcome.odd</h6>
+                                                </div>
+                                            </div>
+                                        </button>
+                                    }
+                                }
+                            }
+                        </div>
+                    </div>
+                </div>
+            }
+        }
+    }
+</body>
+<script>
+    const collapseElementList = document.querySelectorAll('.collapse')
+    const collapseList = [...collapseElementList].map(collapseEl => new bootstrap.Collapse(collapseEl))
+    const bsCollapse = new bootstrap.Collapse('#myCollapse', {
+        toggle: false
+    })
+    const myCollapsible = document.getElementById('myCollapsible')
+    myCollapsible.addEventListener('hidden.bs.collapse', event => {
+        // do something...
+    })
+</script>
+</html>
+
+
+
