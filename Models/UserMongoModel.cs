@@ -30,7 +30,7 @@ public class UserMongoModel
     public void testConnection()
     {
 
-        const string connectionUri = "mongodb+srv://admin:hQSH0VkQDAmU9gT2@mongocluster.uqjdact.mongodb.net/?retryWrites=true&w=majority";
+        const string connectionUri = //your mongo collection uri
 
         var settings = MongoClientSettings.FromConnectionString(connectionUri);
 
