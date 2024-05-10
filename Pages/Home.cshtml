@@ -20,6 +20,7 @@
         {
             var date = DateTimeOffset.FromUnixTimeSeconds(match.d).LocalDateTime;
             var dDate = date.Date;
+            var tomorrow = DateTime.Today.AddDays(+1);
             var today = DateTimeOffset.Now.LocalDateTime.Date;
             var printingDate = "";
             var time = "";
@@ -38,25 +39,123 @@
                             </h5>
                         </div>
 
-                        <div id="@targetText" class="collapse show" aria-labelledby="headingOne" data-parent="#accordion">
+                        <div id="@targetText" class="collapse show row-cols-3 test-class" aria-labelledby="headingOne" data-parent="#accordion">
                             @if (Model.MatchDetails != null)
                             {
+                                var title = "";
+
                                 var betService = new BetService();
                                 var details = betService.GetMatchById(match.i).Datas;
+
                                 @foreach (var item in details.m)
                                 {
-                                    foreach (var outcome in item.o)
+                                    switch (item.st)
                                     {
-                                        <button class="cardButton">
-                                            <div class="card border-warning mb-3 card-body" style="max-width: 18rem; display: flex;">
-                                                <div class="card-header">@outcome.n</div>
-                                                <div class="card-body">
-                                                    <h6 class="card-title">@outcome.odd</h6>
-                                                </div>
-                                            </div>
-                                        </button>
+                                        case 1:
+                                            title = "Maç Sonucu";
+                                            break;
+                                        case 3:
+                                            title = "Çifte Şans";
+                                            break;
+                                        case 5:
+                                            title = "1. Yarı Çifte Şans";
+                                            break;
+                                        case 4:
+                                            title = "1. Yarı Sonucu";
+                                            break;
+                                        case 6:
+                                            title = "Hangi Yarıda Daha Fazla Gol Olur";
+                                            break;
+                                        case 7:
+                                            title = "Maç Sonucu ve Alt/Üst 2.5";
+                                            break;
+                                        case 54:
+                                            title = "2. Yarı Sonucu";
+                                            break;
+                                        case 60:
+                                            title = "1,5 Alt Üst";
+                                            break;
+                                        case 69:
+                                            title = "Ev Sahibi Her İki Yarıyı Kazanır";
+                                            break;
+                                        case 72:
+                                            title = "Deplasman Her İki Yarıyı Kazanır";
+                                            break;
+                                        case 77:
+                                            title = "İlk Yarı Çifte Şans";
+                                            break;
+                                        case 12:
+                                            title = "Tek/Çift";
+                                            break;
+                                        case 92:
+                                            title = "Çifte Şans";
+                                            break;
+                                        case 26:
+                                            title = "Toplam Gol Aralığı";
+                                            break;
+                                        case 11:
+                                            title = "Karşılıklı Gol";
+                                            break;
+                                        case 101:
+                                            title = "2,5 Alt Üst";
+                                            break;
+                                        case 14:
+                                            title = "İlk Yarı/Maç Sonucu";
+                                            break;
+                                        case 86:
+                                            title = "Maç Sonucu";
+                                            break;
+                                        case 622:
+                                            title = "Hnd. MS (2:0)";
+                                            break;
+                                        case 611:
+                                            title = "Hnd. MS (1:0)";
+                                            break;
+                                        case 698:
+                                            title = "Maç Sonucu ve Karşılıklı Gol";
+                                            break;
+                                        case 699:
+                                            title = "İlk Yarı Sonucu ve İlk Yarı Karşılıklı Gol";
+                                            break;
+                                        case 717:
+                                            title = "İlk Yarı Skoru";
+                                            break;
+                                        case 718:
+                                            title = "İlk Yarı/Maç Sonucu Skorları";
+                                            break;
+                                        case 720:
+                                            title = "İlk Yarı Karşılıklı Gol";
+                                            break;
+                                        case 730:
+                                            title = "İki Yarı da Üst 1.5";
+                                            break;
+                                        case 15:
+                                            title = "Maç Skoru";
+                                            break;
+                                        default:
+                                            title = "Bilinmeyen Market";
+                                            break;
                                     }
+                                    if (title != "Bilinmeyen Market"){
+
+                                    <div class="container-bet col-3" style="max-width:fit-content">
+
+                                        <h2>@title</h2>
+
+                                        @foreach (var outcome in item.o)
+                                        {
+
+                                            <div class="bet-option">
+                                                <span>@outcome.n</span>
+                                                <span>@outcome.odd</span>
+                                            </div>
+
+                                        }
+                                    </div>
+                                    }
+
                                 }
+
                             }
                         </div>
                     </div>
@@ -73,8 +172,9 @@
     })
     const myCollapsible = document.getElementById('myCollapsible')
     myCollapsible.addEventListener('hidden.bs.collapse', event => {
-        // do something...
+
     })
+
 </script>
 </html>
 

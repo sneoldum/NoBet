@@ -45,46 +45,57 @@ namespace NoBet.Pages
             {
                 try
                 {
-                    var userToCheck = userService.GetOneByUsername(UserName);
-                    if (userToCheck != null)
+                    if (userService.testConnection())
                     {
-                        if (HashingHelper.VerifyPasswordHash(Password, userToCheck.PasswordHash,
-                                userToCheck.PasswordSalt))
+                        Console.WriteLine("connected");
+                        var userToCheck = userService.GetOneByUsername(UserName);
+                        if (userToCheck != null)
                         {
-                            var claims = new List<Claim>()
+                            if (HashingHelper.VerifyPasswordHash(Password, userToCheck.PasswordHash,
+                                    userToCheck.PasswordSalt))
+                            {
+                                var claims = new List<Claim>()
                             {
                                 new Claim(ClaimTypes.NameIdentifier, Convert.ToString(userToCheck.Id))
                             };
-                            var identity = new ClaimsIdentity(claims, "site");
+                                var identity = new ClaimsIdentity(claims, "site");
 
-                            _contextAccessor.HttpContext!.SignInAsync(new GenericPrincipal(identity, null)).Wait();
-                            CookieOptions options = new CookieOptions
+                                _contextAccessor.HttpContext!.SignInAsync(new GenericPrincipal(identity, null)).Wait();
+                                CookieOptions options = new CookieOptions
+                                {
+                                    // Set any desired options for the cookie (e.g., expiration, domain, etc.)
+                                    // For example, to set an expiration of one week:
+                                    Expires = DateTime.Now.AddDays(7)
+                                };
+
+                                Response.Cookies.Append("username", UserName, options);
+
+                                return RedirectToPage("/Home");
+                            }
+                            else
                             {
-                                // Set any desired options for the cookie (e.g., expiration, domain, etc.)
-                                // For example, to set an expiration of one week:
-                                Expires = DateTime.Now.AddDays(7)
-                            };
-
-                            Response.Cookies.Append("username", UserName, options);
-
-                            return RedirectToPage("/Home");
+                                UserLoginEx = "Please check your password or Username!";
+                            }
                         }
                         else
                         {
-                            UserLoginEx = "Please check your password or Username!";
+                            UserLoginEx = "User not exists!";
                         }
+
                     }
                     else
                     {
-                        UserLoginEx = "User not exists!";
+                        UserLoginEx = "Connection Error!";
                     }
+                    
                 }
                 catch (Exception e)
                 {
-                    UserLoginEx = "User not exists!";
+                    UserLoginEx = e.ToString();
                     throw;
                 }
             }
+            Console.WriteLine(UserLoginEx);
             return Page();
         }
 

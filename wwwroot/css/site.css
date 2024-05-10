@@ -412,3 +412,32 @@ form {
 .card-body {
     align-content: space-between;
 }
+
+.container-bet {
+    border: 2px solid blue;
+    border-radius: 15px;
+    width: 800px; /* Geniþliði ihtiyacýnýza göre ayarlayabilirsiniz */
+    padding: 20px;
+    text-align: center;
+    font-family: Arial, sans-serif;
+    display: flex; /* Bu satýrý ekleyin */
+    flex-wrap: wrap; /* Ýçerik çoksa yeni satýra geçmesi için */
+    justify-content: space-between; /* Ýçerikleri eþit aralýklarla hizalar */
+    align-items: center; /* Dikey hizalama */
+}
+
+.bet-option {
+    border: 1px solid blue;
+    border-radius: 10px;
+    padding: 10px;
+    margin: 10px;
+    display: flex; /* inherit yerine flex kullanýn */
+    flex-direction: column; /* Ýçerikleri dikey olarak hizalar */
+    align-items: center; /* Ýçerikleri merkezler */
+}
+
+    .bet-option span {
+        display: block;
+        font-size: 24px;
+        color: blue;
+    }
